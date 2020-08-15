@@ -4,10 +4,20 @@ html(lang="zh-cmn-Hans")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title QQ PV生成工具
     body
-        section
-            h1.hello-world Hello World!
-        section
-            h2.title 你好，世界
-            p.artist QGRay&nbsp;/&nbsp;洛天依
-            div.lyric
-                div.loading 加载歌词中...
+        #app
+            .get-started(v-if="pvData == null")
+                input(type="file", ref="fileSelector", @change="fileSelected(this.files)")
+                .drag-area(@dragleave="function(e) {e.preventDefault();}", @dragenter="function(e) {e.preventDefault();}", @dragover="function(e) {e.preventDefault();}", @drop="dragHandler")
+                    Drag(width="150")
+                    p 将PV数据拖入此处
+                    p 或#[a(href="javascript:;", @click="exploreFile()") 点击这里]来手动选择
+                a(href="javascript:;", @click="startNew()") 创建新PV
+            .editor(v-else)
+                .title-bar
+                    input(type="text", v-model="pvData.name")
+                    button(@click="playPV()") 播放
+                        Play(height="16")
+                .container
+                    .playflow
+                    .modules
+                        h3 模块箱

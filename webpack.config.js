@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CssMinizerWebpackPlugin = require("css-minimizer-webpack-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = env => {
     // Determine build mode
@@ -17,7 +18,7 @@ module.exports = env => {
             let spl = file.split(".");
             let ext = spl.pop();
             let id = spl.join(".");
-            if (ext.toLowerCase() == "ts") {
+            if (ext.toLowerCase() == "ts" && !file.endsWith(".d.ts")) {
                 entries[id] = path.resolve(__dirname, "src/ts/", file);
             }
         }
@@ -66,7 +67,8 @@ module.exports = env => {
         new MiniCssExtractPlugin({
             filename: "css/[name].[contenthash:5].css",
             chunkFilename: "css/[name].[contenthash:5].css"
-        })
+        }),
+        new VueLoaderPlugin()
     ];
     fs.readdirSync(path.resolve(__dirname, "src/pug/")).forEach(file => {
         let fpath = path.resolve(__dirname, "src/pug/", file);
@@ -85,6 +87,7 @@ module.exports = env => {
             }
         }
     });
+    // Static configuration
     return {
         mode: mode,
         entry: entries,
@@ -94,6 +97,12 @@ module.exports = env => {
         },
         optimization: optimization,
         plugins: plugins,
+        resolve: {
+            alias: {
+                'vue$': 'vue/dist/vue.esm.js'
+            },
+            extensions: ['.wasm', '.mjs', '.ts', '.js', '.json']
+        },
         module: {
             rules: [
                 {
@@ -137,6 +146,12 @@ module.exports = env => {
                     ]
                 },
                 {
+                    test: /\.(vue)$/,
+                    use: [
+                        'vue-loader'
+                    ]
+                },
+                {
                     test: /\.(woff|woff2|ttf|eot|svg)$/,
                     include: /(font-awesome)/,
                     use: [
@@ -150,9 +165,16 @@ module.exports = env => {
                     ]
                 },
                 {
-                    test: /\.(txt)$/,
+                    test: /\.svg$/,
+                    issuer: /\.(vue|js|ts|svg)$/,
                     use: [
-                        'file-loader?name=texts/[name].[ext]'
+                        'vue-loader',
+                        {
+                            loader: 'svg-to-vue-component/loader',
+                            options: {
+                                svgoConfig: false
+                            }
+                        }
                     ]
                 }
             ]

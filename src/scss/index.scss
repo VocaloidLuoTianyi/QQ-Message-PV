@@ -1,67 +1,175 @@
+@charset "utf-8";
 body {
     margin: 0;
 }
-section {
-    width: 100%;
-    min-height: 100vh;
-    padding: 10px;
-    box-sizing: border-box;
-    
-    .hello-world {
-        font-family: Consolas;
-        font-weight: normal;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        border-bottom: 1px solid #666;
+// Get Started Page Styles
+.get-started {
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    input[type=file] {
+        display: none;
     }
-    .hello-world::after {
-        content: "你好，世界！";
-        font-family: "Microsoft YaHei", 黑体;
-        font-size: 14px;
-        color: #666;
+
+    .drag-area {
+        color: #999;
+        border: 5px dashed #999;
+        border-radius: 15px;
+        padding: 40px 70px;
+
+        p {
+            margin: 0;
+        }
+        p:first-of-type {
+            margin-top: 10px;
+        }
+
+        a {
+            color: #666;
+            text-decoration: none;
+            transition: all .3s linear;
+        }
+        a:hover {
+            color: #333;
+        }
+        a:active {
+            color: black;
+        }
+    }
+
+    > a {
+        color: #6cf;
+        position: relative;
+        top: 10px;
+        text-decoration: none;
+        transition: all .3s linear;
+    }
+    > a::after {
+        content: '';
         position: absolute;
         top: 100%;
-        left: 0;
+        left: 50%;
+        transform: translate(-50%);
+        background-color: #6cf;
+        width: 0;
+        height: 1px;
+        transition: width .2s ease-in-out, background-color .3s linear;
     }
-
-    .title {
-        font-weight: lighter;
-        font-family: 'Microsoft YaHei', 黑体;
-        border-bottom: 1px solid #999;
-        margin-bottom: 0;
+    > a:hover::after {
+        width: 100%;
     }
-    .artist {
-        font-weight: lighter;
-        font-family: 'Microsoft YaHei', 黑体;
-        margin-top: 0;
-        font-size: 12px;
-        color: #999;
+    > a:active {
+        color: rgb(76, 154, 194);
     }
-    .lyric {
-        white-space: pre-line;
+    > a:active::after {
+        background-color: rgb(76, 154, 194);
     }
 }
+// Editor Styles
+.editor {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 
-.loading {
-    color: #666;
-    position: relative;
-    left: 50%;
-    transform: translate(-50%);
-    margin-bottom: 5px;
-    display: inline-block;
-}
+    .title-bar {
+        position: relative;
+        padding: 10px 20px;
+        background-color: #f7f7f7;
+        border-bottom: 1px solid #ddd;
 
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    margin-top: 2px;
-    display: block;
-    width: 100%;
-    height: 3px;
-    animation: loading 2s ease-in-out infinite;
-    background-color: #6cf;
+        input[type=text] {
+            font-size: 18px;
+            color: #666;
+            outline: none;
+            border: 1px solid transparent;
+            background-color: transparent;
+            transition: all .3s linear;
+        }
+        input[type=text]:focus {
+            border: 1px solid #aaa;
+        }
+
+        button {
+            padding: 1px 20px;
+            padding-right: 36px;
+            color: #666;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            border: none;
+            background-color: transparent;
+            font-size: 16px;
+            white-space: nowrap;
+            transition: all .3s linear;
+            outline: none;
+            z-index: 2;
+            cursor: pointer;
+
+            svg {
+                position: absolute;
+                top: 50%;
+                transform: translate(0, -50%);
+            }
+            svg path {
+                fill: #666;
+                transition: all .3s linear;
+            }
+        }
+        button::after {
+            content: '';
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            background-color: #40ff40;
+            transition: all .3s ease-in-out;
+            z-index: -1;
+        }
+        button:hover {
+            color: white;
+
+            svg path {
+                fill: white;
+            }
+        }
+        button:hover::after {
+            width: 100%;
+        }
+    }
+    .container {
+        flex: 1;
+        display: flex;
+
+        .playflow {
+            flex: 10;
+            position: relative;
+        }
+        .playflow::after {
+            content: 'PV播放流程';
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            font-size: 36px;
+            opacity: .3;
+        }
+        
+        .modules {
+            flex: 2;
+            min-width: 300px;
+            padding: 5px 10px;
+            background-color: #f7f7f7;
+            box-shadow: 0 0 15px #ddd;
+
+            h3 {
+                color: #555;
+                margin: 0;
+            }
+        }
+    }
 }
